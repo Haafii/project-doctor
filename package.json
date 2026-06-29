@@ -1,0 +1,36 @@
+{
+  "name": "project-doctor-monorepo",
+  "version": "0.1.0",
+  "description": "Lighthouse-style health checks for JavaScript and TypeScript projects.",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.15.4",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Haafii/project-doctor.git"
+  },
+  "keywords": [
+    "project-health",
+    "javascript",
+    "typescript",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @haafii/project-doctor-core && npm run build --workspace @haafii/project-doctor",
+    "clean": "npm run clean --workspaces",
+    "coverage": "npm run build && node --test --experimental-test-coverage test/*.test.mjs",
+    "type-check": "tsc -b packages/core packages/cli",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "scan": "node packages/cli/dist/index.js scan ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "typescript": "^5.7.3"
+  }
+}

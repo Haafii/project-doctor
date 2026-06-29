@@ -1,0 +1,27 @@
+{
+  "name": "healthy-ts",
+  "version": "1.0.0",
+  "description": "A healthy TypeScript fixture for Project Doctor tests.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/example/healthy-ts.git"
+  },
+  "keywords": ["health", "typescript"],
+  "engines": {
+    "node": ">=20"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "node --test",
+    "coverage": "node --test --experimental-test-coverage",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  }
+}

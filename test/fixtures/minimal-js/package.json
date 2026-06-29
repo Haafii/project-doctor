@@ -1,0 +1,10 @@
+{
+  "name": "minimal-js",
+  "version": "0.0.1",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}

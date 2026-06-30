@@ -1,6 +1,6 @@
 {
   "name": "@haafii/project-doctor-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Core scanning, analysis, scoring, fixing, and reporting engine for Project Doctor.",
   "type": "module",
   "license": "MIT",

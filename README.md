@@ -4,6 +4,18 @@ Project Doctor is a Lighthouse-style health scanner for JavaScript and TypeScrip
 
 This repository is the MVP implementation described in `project-doctor-planning.md`.
 
+## Install
+
+```sh
+npx @haafii/project-doctor scan .
+npm install -D @haafii/project-doctor
+```
+
+Published packages:
+
+- [`@haafii/project-doctor`](https://www.npmjs.com/package/@haafii/project-doctor)
+- [`@haafii/project-doctor-core`](https://www.npmjs.com/package/@haafii/project-doctor-core)
+
 ## Commands
 
 ```sh

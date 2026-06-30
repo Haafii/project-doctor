@@ -1,6 +1,6 @@
 {
   "name": "@haafii/project-doctor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Command line interface for Project Doctor.",
   "type": "module",
   "license": "MIT",
@@ -15,7 +15,7 @@
     "project-doctor": "dist/index.js"
   },
   "dependencies": {
-    "@haafii/project-doctor-core": "0.1.0",
+    "@haafii/project-doctor-core": "0.1.1",
     "commander": "^12.1.0"
   },
   "files": [

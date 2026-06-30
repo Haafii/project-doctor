@@ -1,6 +1,8 @@
 import type { Analyzer, Issue, ScanContext } from '../types/index.js';
+import { deprecatedAnalyzer } from './dependency/deprecated.js';
 import { lockfileAnalyzer } from './dependency/lockfile.js';
 import { dependencyImportsAnalyzer } from './dependency/imports.js';
+import { outdatedAnalyzer } from './dependency/outdated.js';
 import { changelogAnalyzer } from './documentation/changelog.js';
 import { contributingAnalyzer } from './documentation/contributing.js';
 import { licenseAnalyzer } from './documentation/license.js';
@@ -12,13 +14,17 @@ import { eslintAnalyzer } from './quality/eslint.js';
 import { prettierAnalyzer } from './quality/prettier.js';
 import { typescriptAnalyzer } from './quality/typescript.js';
 import { securityAnalyzer } from './security/baseline.js';
+import { npmAuditAnalyzer } from './security/npm-audit.js';
 import { ciTestAnalyzer } from './testing/ci-test.js';
 import { testingAnalyzer } from './testing/framework.js';
 
 export const coreAnalyzers: Analyzer[] = [
   securityAnalyzer,
+  npmAuditAnalyzer,
   lockfileAnalyzer,
   dependencyImportsAnalyzer,
+  outdatedAnalyzer,
+  deprecatedAnalyzer,
   readmeAnalyzer,
   licenseAnalyzer,
   changelogAnalyzer,

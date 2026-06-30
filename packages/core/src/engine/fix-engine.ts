@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Fix, FixOptions, FixResult, FixRunOptions, FixSummary, HealthReport, Issue, PackageJson, ScanContext } from '../types/index.js';
+import { runCommand } from '../utils/command.js';
 import { pathExists, readJsonFile } from '../utils/file.js';
 
 type WritePlan = {
@@ -54,6 +55,46 @@ async function updatePackageJson(context: ScanContext, options: FixOptions, upda
     filesModified: options.dryRun ? [] : ['package.json'],
     filesDeleted: [],
     commandsRun: [],
+    message
+  };
+}
+
+async function runNpmFix(context: ScanContext, options: FixOptions, args: string[], message: string): Promise<FixResult> {
+  const command = `npm ${args.join(' ')}`;
+  if (options.dryRun) {
+    return {
+      success: true,
+      filesCreated: [],
+      filesModified: [],
+      filesDeleted: [],
+      commandsRun: [command],
+      message
+    };
+  }
+
+  const result = await runCommand('npm', args, {
+    cwd: context.root,
+    timeoutMs: 120000
+  });
+
+  return {
+    success: result.exitCode === 0,
+    filesCreated: [],
+    filesModified: [],
+    filesDeleted: [],
+    commandsRun: [command],
+    message: result.exitCode === 0 ? message : `${message} Command exited with code ${result.exitCode}.`,
+    error: result.exitCode === 0 ? undefined : new Error(result.stderr || result.stdout || `Command failed: ${command}`)
+  };
+}
+
+function manualNpmFix(message: string, command: string): FixResult {
+  return {
+    success: true,
+    filesCreated: [],
+    filesModified: [],
+    filesDeleted: [],
+    commandsRun: [command],
     message
   };
 }
@@ -265,6 +306,52 @@ export const coreFixes: Fix[] = [
         options,
         'Created .npmignore.'
       )
+  },
+  {
+    id: 'fix:generate-lockfile',
+    name: 'Generate npm lockfile',
+    description: 'Run npm install --package-lock-only to generate a lockfile.',
+    tier: 'safe',
+    resolves: ['dependencies/lockfile-missing'],
+    applicable: async (context) => !(await pathExists(path.join(context.root, 'package-lock.json'))),
+    apply: async (context, options) =>
+      runNpmFix(context, options, ['install', '--package-lock-only'], 'Generated package-lock.json.')
+  },
+  {
+    id: 'fix:npm-audit',
+    name: 'Run npm audit fix',
+    description: 'Run npm audit fix for auto-fixable vulnerabilities.',
+    tier: 'confirmation',
+    resolves: ['security/npm-audit-critical', 'security/npm-audit-high', 'security/npm-audit-moderate', 'security/npm-audit-medium', 'security/npm-audit-low'],
+    applicable: async (context) => context.lockfileType === 'npm',
+    apply: async (context, options) => runNpmFix(context, options, ['audit', 'fix'], 'Ran npm audit fix.')
+  },
+  {
+    id: 'fix:update-deps',
+    name: 'Update npm dependencies',
+    description: 'Run npm update to move dependencies within allowed package.json ranges.',
+    tier: 'confirmation',
+    resolves: ['dependencies/outdated-major', 'dependencies/outdated-minor', 'dependencies/deprecated'],
+    applicable: async (context) => context.lockfileType === 'npm',
+    apply: async (context, options) => runNpmFix(context, options, ['update'], 'Ran npm update.')
+  },
+  {
+    id: 'fix:add-missing-deps',
+    name: 'Install missing dependencies',
+    description: 'Shows the command shape for missing dependency installation.',
+    tier: 'confirmation',
+    resolves: ['dependencies/missing'],
+    applicable: async () => true,
+    apply: async () => manualNpmFix('Install the missing packages listed in the report.', 'npm install <missing-package>')
+  },
+  {
+    id: 'fix:remove-unused-deps',
+    name: 'Remove unused dependencies',
+    description: 'Shows the command shape for removing unused dependencies.',
+    tier: 'confirmation',
+    resolves: ['dependencies/unused'],
+    applicable: async () => true,
+    apply: async () => manualNpmFix('Remove the unused packages listed in the report after confirming they are truly unused.', 'npm uninstall <unused-package>')
   },
   {
     id: 'fix:add-engines',

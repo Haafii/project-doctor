@@ -40,6 +40,7 @@ Included now:
 
 - package.json, lockfile, filesystem, and git scanning
 - dependency import checks for missing and unused runtime dependencies
+- live npm checks for audit vulnerabilities, outdated packages, and deprecated direct dependencies
 - documentation checks for README, LICENSE, CHANGELOG, and CONTRIBUTING
 - quality checks for ESLint, Prettier, TypeScript strict mode, and EditorConfig
 - testing and CI/CD detection
@@ -50,8 +51,6 @@ Included now:
 
 Planned next:
 
-- registry-backed outdated/deprecated package checks
-- npm audit integration
 - interactive confirmation-tier fixes
 - plugin loading and first-party framework plugins
 - richer HTML dashboard and monorepo scoring

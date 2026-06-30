@@ -52,6 +52,7 @@ This early release includes:
 
 - filesystem, package.json, lockfile, and git scanning
 - missing and unused dependency checks
+- live npm audit, outdated package, and deprecated package checks when dependencies are installed
 - README, LICENSE, CHANGELOG, and CONTRIBUTING checks
 - ESLint, Prettier, TypeScript strict mode, and EditorConfig checks
 - test framework, test file, coverage, and CI checks
@@ -62,4 +63,3 @@ This early release includes:
 ## Repository
 
 Source code and roadmap: <https://github.com/Haafii/project-doctor>
-

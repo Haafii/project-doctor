@@ -34,7 +34,14 @@ console.log(markdown);
 - `defineConfig`
 - public TypeScript types for analyzers, issues, fixes, formatters, and reports
 
+## Live npm Checks
+
+When a scanned npm project has installed dependencies, the core analyzers can run npm-backed checks for:
+
+- `npm audit --json`
+- `npm outdated --json --long`
+- direct dependency deprecation notices from the npm registry
+
 ## Repository
 
 Source code and roadmap: <https://github.com/Haafii/project-doctor>
-

@@ -1,6 +1,6 @@
 {
   "name": "project-doctor-monorepo",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Lighthouse-style health checks for JavaScript and TypeScript projects.",
   "private": true,
   "type": "module",

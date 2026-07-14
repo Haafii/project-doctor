@@ -66,6 +66,12 @@ Both workspace packages are also `0.2.0`:
 
 Phase 2 code has been committed and pushed to `main`.
 
+The GitHub remote is configured over SSH:
+
+```text
+git@github.com:Haafii/project-doctor.git
+```
+
 ### npm Published Version
 
 The latest version published on npm is currently:
@@ -79,25 +85,19 @@ The `0.2.0` code is ready but has not been published to npm yet.
 
 ### Tags
 
-Remote GitHub tag:
+Remote GitHub tags:
 
 ```text
 v0.1.1
-```
-
-Local-only tag:
-
-```text
 v0.2.0
 ```
 
-The `v0.2.0` tag exists locally but was not pushed because the non-interactive terminal session could not prompt for GitHub HTTPS credentials.
+The `v0.2.0` tag has been pushed to GitHub and points at the Phase 2 implementation commit.
 
 To finish the `0.2.0` release:
 
 ```sh
 cd /Users/hafismuhammed/Desktop/project-doctor
-git push origin v0.2.0
 npm login
 npm publish --workspace @haafii/project-doctor-core --access public
 npm publish --workspace @haafii/project-doctor --access public
@@ -909,11 +909,10 @@ Completed:
 - parser-level tests for the new npm-backed analyzers
 - confirmation-tier fixes for `npm audit fix` and `npm update`
 - docs updated for live npm checks
-- local `v0.2.0` tag created
+- `v0.2.0` tag created and pushed to GitHub
 
 Still needed:
 
-- push local `v0.2.0` tag to GitHub
 - publish `0.2.0` packages to npm
 
 ## 15. Current Known Limitations
@@ -936,15 +935,15 @@ create a fresh granular npm token with:
 - access to the `@haafii` scope
 - publish/bypass-2FA enabled if the npm UI shows that option
 
-### GitHub HTTPS Tag Push
+### GitHub Remote Auth
 
-The main branch has been pushed, but `v0.2.0` tag push failed in a non-interactive shell because GitHub could not prompt for HTTPS credentials.
+The repository now uses the SSH remote:
 
-Run locally:
-
-```sh
-git push origin v0.2.0
+```text
+git@github.com:Haafii/project-doctor.git
 ```
+
+SSH authentication works for the `Haafii` GitHub account on this machine. This fixed the earlier non-interactive HTTPS credential prompt problem.
 
 ### Live npm Checks Require Installed Dependencies
 
@@ -1182,13 +1181,7 @@ The current code is still early pre-1.0. Treat `0.2.0` as an incremental Phase 2
 
 If a new developer picks this up today, do these in order:
 
-1. Push the `v0.2.0` tag:
-
-   ```sh
-   git push origin v0.2.0
-   ```
-
-2. Publish `0.2.0`:
+1. Publish `0.2.0`:
 
    ```sh
    npm login
@@ -1196,22 +1189,22 @@ If a new developer picks this up today, do these in order:
    npm publish --workspace @haafii/project-doctor --access public
    ```
 
-3. Verify npm:
+2. Verify npm:
 
    ```sh
    npm view @haafii/project-doctor version
    npm view @haafii/project-doctor-core version
    ```
 
-4. Run from a temporary project:
+3. Run from a temporary project:
 
    ```sh
    npx @haafii/project-doctor scan .
    ```
 
-5. Create GitHub release notes for `v0.2.0`.
+4. Create GitHub release notes for `v0.2.0`.
 
-6. Start Phase 2.2 interactive fixes.
+5. Start Phase 2.2 interactive fixes.
 
 ## 18. Security Notes
 

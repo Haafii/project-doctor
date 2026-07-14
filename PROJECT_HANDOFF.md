@@ -88,7 +88,8 @@ Release-readiness checks run on 2026-07-14:
 - `npm test` passed.
 - `npm pack --workspace @haafii/project-doctor-core --dry-run` passed for `0.2.0`.
 - `npm pack --workspace @haafii/project-doctor --dry-run` passed for `0.2.0`.
-- `npm whoami` currently fails with `E401 Unauthorized`, so actual npm publish is blocked until npm auth is refreshed.
+- `npm whoami` now succeeds as `haafii`.
+- `npm publish --workspace @haafii/project-doctor-core --access public` was attempted and failed with `E403` because npm requires either a current 2FA OTP or a granular token with bypass-2FA publish permission.
 
 ### Tags
 
@@ -928,13 +929,21 @@ Still needed:
 
 Publishing requires npm authentication that can publish under `@haafii`.
 
-As of 2026-07-14, the local npm registry session is invalid:
+As of 2026-07-14, the local npm registry session is valid:
 
 ```text
-npm whoami -> E401 Unauthorized
+npm whoami -> haafii
 ```
 
 The packages themselves are ready for publish. Tests and npm dry-run packs passed for both `0.2.0` workspaces.
+
+The remaining publish blocker is npm's write-time security requirement:
+
+```text
+npm publish -> E403 Two-factor authentication or granular access token with bypass 2fa enabled is required
+```
+
+To publish from a non-interactive shell, either pass a current npm 2FA code with `--otp` or configure a granular npm token that has publish access and bypass-2FA permission.
 
 The latest successful publish used a granular token with publish permission. That token should be revoked after use if it was shared anywhere unsafe.
 
@@ -1196,18 +1205,17 @@ The current code is still early pre-1.0. Treat `0.2.0` as an incremental Phase 2
 
 If a new developer picks this up today, do these in order:
 
-1. Refresh npm authentication:
+1. Confirm npm authentication:
 
    ```sh
-   npm login
    npm whoami
    ```
 
 2. Publish `0.2.0`:
 
    ```sh
-   npm publish --workspace @haafii/project-doctor-core --access public
-   npm publish --workspace @haafii/project-doctor --access public
+   npm publish --workspace @haafii/project-doctor-core --access public --otp <current-npm-otp>
+   npm publish --workspace @haafii/project-doctor --access public --otp <current-npm-otp>
    ```
 
 3. Verify npm:

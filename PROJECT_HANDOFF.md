@@ -39,7 +39,7 @@ https://github.com/Haafii/project-doctor
 
 ## 2. Current Release State
 
-There is an important difference between the code in the repository and the code currently published to npm.
+GitHub and npm are aligned for the current `0.2.0` release.
 
 ### GitHub / Local Code
 
@@ -77,19 +77,21 @@ git@github.com:Haafii/project-doctor.git
 The latest version published on npm is currently:
 
 ```text
-@haafii/project-doctor@0.1.1
-@haafii/project-doctor-core@0.1.1
+@haafii/project-doctor@0.2.0
+@haafii/project-doctor-core@0.2.0
 ```
 
-The `0.2.0` code is ready but has not been published to npm yet.
-
-Release-readiness checks run on 2026-07-14:
+Release and verification checks run on 2026-07-14:
 
 - `npm test` passed.
 - `npm pack --workspace @haafii/project-doctor-core --dry-run` passed for `0.2.0`.
 - `npm pack --workspace @haafii/project-doctor --dry-run` passed for `0.2.0`.
 - `npm whoami` now succeeds as `haafii`.
-- `npm publish --workspace @haafii/project-doctor-core --access public` was attempted and failed with `E403` because npm requires either a current 2FA OTP or a granular token with bypass-2FA publish permission.
+- `npm publish --workspace @haafii/project-doctor-core --access public` succeeded.
+- `npm publish --workspace @haafii/project-doctor --access public` succeeded.
+- `npm view @haafii/project-doctor version` returns `0.2.0`.
+- `npm view @haafii/project-doctor-core version` returns `0.2.0`.
+- `npx -y @haafii/project-doctor@0.2.0 scan .` passed from a temporary project.
 
 ### Tags
 
@@ -102,16 +104,18 @@ v0.2.0
 
 The `v0.2.0` tag has been pushed to GitHub and points at the Phase 2 implementation commit.
 
-To finish the `0.2.0` release:
+To use the current release:
 
 ```sh
-cd /Users/hafismuhammed/Desktop/project-doctor
-npm login
-npm publish --workspace @haafii/project-doctor-core --access public
-npm publish --workspace @haafii/project-doctor --access public
+npx @haafii/project-doctor scan .
 ```
 
-If npm requires a token, create a fresh granular npm token with read/write permission and publish/bypass-2FA permission. Do not paste long-lived tokens into chat or commit them to disk.
+If installing globally:
+
+```sh
+npm install -g @haafii/project-doctor
+project-doctor scan .
+```
 
 ## 3. Repository Structure
 
@@ -900,7 +904,7 @@ Completed:
 
 ### Phase 2: npm-Backed Dependency and Security Checks
 
-Status: implemented in code and pushed to `main`; not yet published to npm.
+Status: complete, pushed to GitHub, tagged, and published to npm.
 
 Version:
 
@@ -918,14 +922,14 @@ Completed:
 - confirmation-tier fixes for `npm audit fix` and `npm update`
 - docs updated for live npm checks
 - `v0.2.0` tag created and pushed to GitHub
-
-Still needed:
-
-- publish `0.2.0` packages to npm
+- `@haafii/project-doctor-core@0.2.0` published to npm
+- `@haafii/project-doctor@0.2.0` published to npm
+- npm `latest` verified as `0.2.0` for both packages
+- `npx @haafii/project-doctor@0.2.0 scan .` verified from a temporary project
 
 ## 15. Current Known Limitations
 
-### npm Auth / Publishing
+### npm Auth / Publishing Notes
 
 Publishing requires npm authentication that can publish under `@haafii`.
 
@@ -935,17 +939,9 @@ As of 2026-07-14, the local npm registry session is valid:
 npm whoami -> haafii
 ```
 
-The packages themselves are ready for publish. Tests and npm dry-run packs passed for both `0.2.0` workspaces.
+The `0.2.0` packages were published after tests and npm dry-run packs passed for both workspaces.
 
-The remaining publish blocker is npm's write-time security requirement:
-
-```text
-npm publish -> E403 Two-factor authentication or granular access token with bypass 2fa enabled is required
-```
-
-To publish from a non-interactive shell, either pass a current npm 2FA code with `--otp` or configure a granular npm token that has publish access and bypass-2FA permission.
-
-The latest successful publish used a granular token with publish permission. That token should be revoked after use if it was shared anywhere unsafe.
+The latest successful publish used a granular token with publish permission. That token should be revoked after use because it was shared through chat during the release process.
 
 If publishing fails with:
 
@@ -1005,16 +1001,15 @@ Plugin commands exist as placeholders, but plugin loading is not implemented yet
 
 ### Phase 2.1: Publish and Stabilize `0.2.0`
 
-Priority: immediate.
+Status: complete.
 
-Tasks:
+Completed:
 
 - push `v0.2.0` tag
 - publish `@haafii/project-doctor-core@0.2.0`
 - publish `@haafii/project-doctor@0.2.0`
 - verify npm latest is `0.2.0`
 - run `npx @haafii/project-doctor scan .` from a temporary project
-- add GitHub release notes for `v0.2.0`
 
 Recommended release notes:
 
@@ -1205,35 +1200,13 @@ The current code is still early pre-1.0. Treat `0.2.0` as an incremental Phase 2
 
 If a new developer picks this up today, do these in order:
 
-1. Confirm npm authentication:
+1. Revoke the npm token that was shared during the `0.2.0` publish.
 
-   ```sh
-   npm whoami
-   ```
+2. Create GitHub release notes for `v0.2.0`.
 
-2. Publish `0.2.0`:
+3. Start Phase 2.2 interactive fixes.
 
-   ```sh
-   npm publish --workspace @haafii/project-doctor-core --access public --otp <current-npm-otp>
-   npm publish --workspace @haafii/project-doctor --access public --otp <current-npm-otp>
-   ```
-
-3. Verify npm:
-
-   ```sh
-   npm view @haafii/project-doctor version
-   npm view @haafii/project-doctor-core version
-   ```
-
-4. Run from a temporary project:
-
-   ```sh
-   npx @haafii/project-doctor scan .
-   ```
-
-5. Create GitHub release notes for `v0.2.0`.
-
-6. Start Phase 2.2 interactive fixes.
+4. Keep this `PROJECT_HANDOFF.md` file updated after every meaningful implementation, release, or publishing change.
 
 ## 18. Security Notes
 

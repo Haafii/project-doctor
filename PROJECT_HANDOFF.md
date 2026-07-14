@@ -83,6 +83,13 @@ The latest version published on npm is currently:
 
 The `0.2.0` code is ready but has not been published to npm yet.
 
+Release-readiness checks run on 2026-07-14:
+
+- `npm test` passed.
+- `npm pack --workspace @haafii/project-doctor-core --dry-run` passed for `0.2.0`.
+- `npm pack --workspace @haafii/project-doctor --dry-run` passed for `0.2.0`.
+- `npm whoami` currently fails with `E401 Unauthorized`, so actual npm publish is blocked until npm auth is refreshed.
+
 ### Tags
 
 Remote GitHub tags:
@@ -921,6 +928,14 @@ Still needed:
 
 Publishing requires npm authentication that can publish under `@haafii`.
 
+As of 2026-07-14, the local npm registry session is invalid:
+
+```text
+npm whoami -> E401 Unauthorized
+```
+
+The packages themselves are ready for publish. Tests and npm dry-run packs passed for both `0.2.0` workspaces.
+
 The latest successful publish used a granular token with publish permission. That token should be revoked after use if it was shared anywhere unsafe.
 
 If publishing fails with:
@@ -1181,30 +1196,36 @@ The current code is still early pre-1.0. Treat `0.2.0` as an incremental Phase 2
 
 If a new developer picks this up today, do these in order:
 
-1. Publish `0.2.0`:
+1. Refresh npm authentication:
 
    ```sh
    npm login
+   npm whoami
+   ```
+
+2. Publish `0.2.0`:
+
+   ```sh
    npm publish --workspace @haafii/project-doctor-core --access public
    npm publish --workspace @haafii/project-doctor --access public
    ```
 
-2. Verify npm:
+3. Verify npm:
 
    ```sh
    npm view @haafii/project-doctor version
    npm view @haafii/project-doctor-core version
    ```
 
-3. Run from a temporary project:
+4. Run from a temporary project:
 
    ```sh
    npx @haafii/project-doctor scan .
    ```
 
-4. Create GitHub release notes for `v0.2.0`.
+5. Create GitHub release notes for `v0.2.0`.
 
-5. Start Phase 2.2 interactive fixes.
+6. Start Phase 2.2 interactive fixes.
 
 ## 18. Security Notes
 

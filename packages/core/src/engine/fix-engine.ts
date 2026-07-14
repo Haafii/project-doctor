@@ -463,7 +463,7 @@ export async function applyFixes(context: ScanContext, report: HealthReport, opt
   const skip = new Set(options.skip ?? []);
   const available = await getAvailableFixes(context, report.issues);
   const selected = available.filter((fix) => !skip.has(fix.id) && (!only || only.has(fix.id)));
-  const runnable = selected.filter((fix) => fix.tier === 'safe' || options.force);
+  const runnable = selected.filter((fix) => fix.tier === 'safe' || (fix.tier === 'confirmation' && options.force));
   const results: FixResult[] = [];
 
   for (const fix of runnable) {
@@ -471,7 +471,7 @@ export async function applyFixes(context: ScanContext, report: HealthReport, opt
       await fix.apply(context, {
         dryRun: options.dryRun ?? false,
         force: options.force ?? false,
-        interactive: false
+        interactive: options.interactive ?? false
       })
     );
   }

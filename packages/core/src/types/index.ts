@@ -323,6 +323,7 @@ export interface RunScanOptions extends ScanOptions {
 export interface FixRunOptions extends ScanOptions {
   dryRun?: boolean;
   force?: boolean;
+  interactive?: boolean;
   only?: string[];
   skip?: string[];
 }

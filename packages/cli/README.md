@@ -35,6 +35,7 @@ project-doctor report . --format html
 project-doctor report . --format json --output report.json
 project-doctor fix . --dry-run
 project-doctor fix .
+project-doctor fix . --force --no-interactive
 project-doctor init .
 ```
 
@@ -44,7 +45,10 @@ project-doctor init .
 npx @haafii/project-doctor scan . --format json
 npx @haafii/project-doctor scan . --ci --min-score 70
 npx @haafii/project-doctor report . --format markdown --output HEALTH.md
+npx @haafii/project-doctor fix . --dry-run
 ```
+
+`project-doctor fix` prompts in an interactive terminal. In CI or scripts, it applies safe fixes by default; pass `--force --no-interactive` to allow confirmation-tier fixes such as `npm audit fix` and `npm update`.
 
 ## Current Scope
 
@@ -58,7 +62,7 @@ This early release includes:
 - test framework, test file, coverage, and CI checks
 - basic security checks for secrets, env files, lifecycle scripts, and package publish surface
 - terminal, JSON, Markdown, and self-contained HTML reports
-- safe automatic fixes for common project hygiene files
+- interactive and non-interactive fixes for common project hygiene files and confirmation-tier npm actions
 
 ## Repository
 

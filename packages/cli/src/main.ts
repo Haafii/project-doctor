@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module';
 import { Command } from 'commander';
 import { registerFixCommand } from './commands/fix.js';
 import { registerInitCommand } from './commands/init.js';
@@ -8,6 +9,10 @@ import type { ScanCliOptions } from './commands/scan.js';
 import { registerScoreCommand } from './commands/score.js';
 import { readActionOptions } from './commands/options.js';
 
+const require = createRequire(import.meta.url);
+const packageJson = require('../package.json') as { version?: string };
+const version = packageJson.version ?? '0.0.0';
+
 export async function main(): Promise<void> {
   const program = new Command();
   program.enablePositionalOptions();
@@ -15,7 +20,7 @@ export async function main(): Promise<void> {
   program
     .name('project-doctor')
     .description('Lighthouse-style project health checks for JavaScript and TypeScript projects.')
-    .version('0.1.0')
+    .version(version)
     .argument('[path]', 'Project path to scan', '.')
     .option('-f, --format <format>', 'Output format: terminal, json, html, markdown', 'terminal')
     .option('-o, --output <path>', 'Write report to a file')

@@ -39,7 +39,7 @@ https://github.com/Haafii/project-doctor
 
 ## 2. Current Release State
 
-GitHub and npm are aligned for the current `0.2.0` release.
+npm latest is `0.2.0`. GitHub `main` now contains post-`0.2.0` Phase 2.2 work that has not been published to npm yet.
 
 ### GitHub / Local Code
 
@@ -64,7 +64,18 @@ Both workspace packages are also `0.2.0`:
 @haafii/project-doctor-core@0.2.0
 ```
 
-Phase 2 code has been committed and pushed to `main`.
+Phase 2 npm-backed analysis code has been committed, tagged, published, and pushed to `main`.
+
+Post-`0.2.0` changes currently on `main`:
+
+- interactive `project-doctor fix` selection flow
+- dry-run previews for confirmation-tier fixes
+- before/after fix summary output
+- safer core fix runner behavior that does not run destructive fixes through `--force`
+- dynamic package-version lookup for CLI `--version` and report metadata
+- repo release notes for `v0.2.0`
+
+These post-`0.2.0` changes are not published to npm yet. The next npm publish must bump package versions first.
 
 The GitHub remote is configured over SSH:
 
@@ -748,10 +759,14 @@ Implemented confirmation-tier fixes include:
 
 The CLI currently applies:
 
-- safe fixes by default
-- confirmation-tier fixes when `--force` is passed
+- prompts for fix selection in an interactive terminal
+- defaults to safe fixes when the user presses Enter
+- asks before applying confirmation-tier fixes
+- previews selected fixes with `--dry-run`
+- applies safe fixes only in non-interactive scripts unless `--force` is passed
+- prints a before/after score, issue count, and available-fix summary after successful writes
 
-Interactive prompting is not implemented yet.
+Destructive fixes are still intentionally not runnable.
 
 ## 11. Formatters
 
@@ -941,7 +956,7 @@ npm whoami -> haafii
 
 The `0.2.0` packages were published after tests and npm dry-run packs passed for both workspaces.
 
-The latest successful publish used a granular token with publish permission. That token should be revoked after use because it was shared through chat during the release process.
+The latest successful publish used a granular token with publish permission. That token was revoked after publishing because it was shared through chat during the release process.
 
 If publishing fails with:
 
@@ -975,17 +990,17 @@ This is deliberate. It prevents Project Doctor from unexpectedly installing depe
 
 `project-doctor.config.ts` is planned but not supported yet.
 
-### Interactive Fix Prompts
+### Destructive Fixes
 
-The current `fix` command is non-interactive.
+Interactive fix prompts now exist for TTY usage.
 
-Confirmation-tier fixes require:
+Non-interactive scripts still apply only safe fixes by default. Confirmation-tier fixes require:
 
 ```sh
-project-doctor fix . --force
+project-doctor fix . --force --no-interactive
 ```
 
-This should eventually become an interactive prompt flow.
+Destructive fixes are represented as a tier in the type system but are not runnable yet.
 
 ### Monorepo Support
 
@@ -1025,13 +1040,13 @@ Project Doctor 0.2.0 adds live npm-backed dependency and security analysis:
 
 ### Phase 2.2: Interactive Fix Engine
 
-Priority: high.
+Status: implemented on GitHub `main`; not published to npm yet.
 
 Goal:
 
 Make `project-doctor fix` safe and pleasant for real users.
 
-Tasks:
+Completed:
 
 - add interactive prompts for confirmation-tier fixes
 - let users select fixes from a list
@@ -1040,6 +1055,13 @@ Tasks:
 - preserve `--dry-run`
 - keep `--force` for non-interactive CI usage
 - improve result rendering when commands fail
+- keep destructive fixes disabled even when `--force` is used
+- update CLI and root README docs
+
+Still needed:
+
+- choose the next release version, likely `0.2.1` for CLI polish or `0.3.0` if Phase 2.2 is treated as a feature release
+- publish the Phase 2.2 changes after version bump and release verification
 
 Useful files:
 
@@ -1200,11 +1222,11 @@ The current code is still early pre-1.0. Treat `0.2.0` as an incremental Phase 2
 
 If a new developer picks this up today, do these in order:
 
-1. Revoke the npm token that was shared during the `0.2.0` publish.
+1. Verify the Phase 2.2 interactive fix flow on a real terminal.
 
-2. Create GitHub release notes for `v0.2.0`.
+2. Choose the next npm version for the Phase 2.2 work.
 
-3. Start Phase 2.2 interactive fixes.
+3. Publish the Phase 2.2 changes after bumping package versions and running the release checklist.
 
 4. Keep this `PROJECT_HANDOFF.md` file updated after every meaningful implementation, release, or publishing change.
 

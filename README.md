@@ -25,6 +25,8 @@ npx @haafii/project-doctor scan .
 npx @haafii/project-doctor score .
 npx @haafii/project-doctor report . --format html
 npx @haafii/project-doctor fix . --dry-run
+npx @haafii/project-doctor fix .
+npx @haafii/project-doctor fix . --force --no-interactive
 npx @haafii/project-doctor init .
 ```
 
@@ -47,11 +49,11 @@ Included now:
 - best-practice package metadata checks
 - basic security checks for env files, obvious secrets, risky install scripts, and publish surface
 - terminal, JSON, Markdown, and self-contained HTML reports
-- safe fix registry for common generated files and package metadata
+- interactive and non-interactive fix flows for common generated files, package metadata, and confirmation-tier npm fixes
 
 Planned next:
 
-- interactive confirmation-tier fixes
+- deeper dependency analysis with fewer static import false positives
 - plugin loading and first-party framework plugins
 - richer HTML dashboard and monorepo scoring
 

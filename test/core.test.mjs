@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { runScan, renderReport } from '../packages/core/dist/index.js';
+import { applyFixes, createScanContext, runScan, renderReport } from '../packages/core/dist/index.js';
 import { issuesFromOutdatedReport } from '../packages/core/dist/analyzers/dependency/outdated.js';
 import { issuesFromDeprecatedPackages } from '../packages/core/dist/analyzers/dependency/deprecated.js';
 import { issuesFromAuditReport } from '../packages/core/dist/analyzers/security/npm-audit.js';
@@ -29,6 +30,28 @@ test('json formatter emits parseable output', async () => {
   const parsed = JSON.parse(rendered.toString());
   assert.equal(parsed.project.name, 'healthy-ts');
   assert.equal(typeof parsed.score.total, 'number');
+});
+
+test('report metadata uses the core package version', async () => {
+  const packageJson = JSON.parse(readFileSync(path.join(root, 'packages/core/package.json'), 'utf8'));
+  const report = await runScan({ root: fixture('healthy-ts') });
+  assert.equal(report.version, packageJson.version);
+});
+
+test('forced dry run previews confirmation-tier dependency fixes', async () => {
+  const projectRoot = fixture('minimal-js');
+  const context = await createScanContext({ root: projectRoot });
+  const report = await runScan({ root: projectRoot });
+  const results = await applyFixes(context, report, {
+    dryRun: true,
+    force: true,
+    only: ['fix:add-missing-deps']
+  });
+
+  assert.equal(results.length, 1);
+  assert.deepEqual(results[0].commandsRun, ['npm install <missing-package>']);
+  assert.deepEqual(results[0].filesCreated, []);
+  assert.deepEqual(results[0].filesModified, []);
 });
 
 test('npm audit parser groups vulnerability severities', () => {

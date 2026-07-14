@@ -1,4 +1,5 @@
 import { writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { runAnalyzers, coreAnalyzers } from './analyzers/index.js';
 import { defineConfig } from './config/defaults.js';
@@ -25,7 +26,9 @@ export { scanProject } from './scanner/index.js';
 export { coreAnalyzers, runAnalyzers };
 export type * from './types/index.js';
 
-const version = '0.1.0';
+const require = createRequire(import.meta.url);
+const packageJson = require('../package.json') as { version?: string };
+const version = packageJson.version ?? '0.0.0';
 
 export async function createScanContext(options: ScanOptions = {}): Promise<ScanContext> {
   const projectRoot = path.resolve(options.root ?? process.cwd());
